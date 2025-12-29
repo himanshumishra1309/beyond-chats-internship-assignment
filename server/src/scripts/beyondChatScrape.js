@@ -1,9 +1,9 @@
 import axios from "axios";
-import { Cheerio } from "cheerio";
+import * as cheerio from "cheerio";
 
 async function getMaxPageNumbers() {
   const { data } = await axios.get("https://beyondchats.com/blogs/");
-  const $ = Cheerio.load(data);
+  const $ = cheerio.load(data);
 
   const pages = [];
 
@@ -23,7 +23,7 @@ async function getFiveBlogs() {
   while (blogs.length < 5 && page > 0) {
     const url = `https://beyondchats.com/blogs/page/${page}/`;
     const { data } = await axios.get(url);
-    const $ = Cheerio.load(data);
+    const $ = cheerio.load(data);
 
     $("article").each((_, el) => {
       if (blogs.length < 5) {
