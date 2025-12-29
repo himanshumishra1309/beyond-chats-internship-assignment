@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
+import { ApiError } from "../utils/ApiError";
 
 const blogs = [];
 
@@ -17,7 +18,7 @@ async function getMaxPageNumbers() {
   
     return Math.max(...pages);
   } catch (error) {
-    
+    throw new ApiError(error.response?.status, error.response?.data?.message);
   }
 }
 
@@ -61,7 +62,7 @@ async function getFiveBlogs() {
       page--;
     }
   } catch (error) {
-    
+    throw new ApiError(error.response?.status, error.response?.data?.message);
   }
 }
 
@@ -96,6 +97,6 @@ async function getBlogData() {
       })
     );
   } catch (error) {
-    console.error(error);
+    throw new ApiError(error.response?.status, error.response?.data?.message);
   }
 }
