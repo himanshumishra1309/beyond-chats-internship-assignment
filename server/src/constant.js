@@ -1,1 +1,1 @@
-export const connectDBname = 'portal';
+export const connectDBname = 'data';

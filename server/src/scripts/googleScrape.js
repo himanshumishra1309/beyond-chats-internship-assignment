@@ -1,5 +1,4 @@
 import axios from "axios";
-import * as cheerio from "cheerio";
 import { ApiError } from "../utils/ApiError";
 import { JSDOM } from "jsdom";
 import { Readability } from "@mozilla/readability";
