@@ -2,11 +2,13 @@ import axios from "axios";
 import * as cheerio from "cheerio";
 import { ApiError } from "../utils/ApiError";
 
-const blogs = [];
 
 async function getMaxPageNumbers() {
   try {
-    const { data } = await axios.get("https://beyondchats.com/blogs/");
+    const { data } = await axios.get("https://beyondchats.com/blogs/", {
+      timeout: 10000,
+      headers: {"User-Agent" : "Mozilla/5.0"} 
+    });
     const $ = cheerio.load(data);
   
     const pages = [];
@@ -16,9 +18,9 @@ async function getMaxPageNumbers() {
       if (!isNaN(page)) pages.push(page);
     });
   
-    return Math.max(...pages);
+    return pages.length ? Math.max(...pages) : 1;
   } catch (error) {
-    throw new ApiError(error.response?.status, error.response?.data?.message);
+    throw new ApiError(400 , "Error fetching page numbers" );
   }
 }
 
@@ -26,10 +28,13 @@ async function getFiveBlogs() {
   try {
     const lastPage = await getMaxPageNumbers();
     let page = lastPage;
-
+    const blogs = [];
     while (blogs.length < 5 && page > 0) {
       const url = `https://beyondchats.com/blogs/page/${page}/`;
-      const { data } = await axios.get(url);
+      const { data } = await axios.get(url, {
+        timeout: 10000,
+        headers: {"User-Agent" : "Mozilla/5.0"} 
+      });
       const $ = cheerio.load(data);
   
       $("article").each((_, el) => {
@@ -61,17 +66,21 @@ async function getFiveBlogs() {
   
       page--;
     }
+    return blogs;
   } catch (error) {
-    throw new ApiError(error.response?.status, error.response?.data?.message);
+    throw new ApiError(400 , "Error Scraping 5 blogs" );
   }
 }
 
 async function getBlogData() {
   try {
-    await Promise.all(
-      blogs.map(async (el) => {
+    const blogs = await getFiveBlogs();
+      for (const el of blogs) {
         const url = el.blogUrl;
-        const { data } = await axios.get(url);
+        const { data } = await axios.get(url, {
+          timeout: 10000,
+          headers: {"User-Agent" : "Mozilla/5.0"} 
+        });
         const $ = cheerio.load(data);
 
         $(".wp-applause-container").remove();
@@ -94,9 +103,11 @@ async function getBlogData() {
         el.contentText = contentText;
         el.contentHtml = contentHtml;
         el.contentImages = contentImages;
-      })
-    );
+      }
+    return blogs;
   } catch (error) {
-    throw new ApiError(error.response?.status, error.response?.data?.message);
+    throw new ApiError(400, "Error Scraping blog content");
   }
 }
+
+export {getBlogData}
