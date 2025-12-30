@@ -3,7 +3,9 @@ import mongoose, {Schema} from "mongoose";
 const googleScrapedArticleSchema = new Schema({
     article_id: {
         type: Schema.Types.ObjectId,
-        ref: "Article"
+        ref: "Article",
+        required: true,
+        index: true
     },
     sourceUrl: {
         type: String,
@@ -13,10 +15,22 @@ const googleScrapedArticleSchema = new Schema({
         type: String,
         required: true,
     },
-    contentText: article.textContent,
-    contentHtml: article.content,
-    length: article.length,
-    excerpt: article.excerpt,
+    contentText: {
+        type: String,
+        required: true,
+    },
+    contentHtml:{
+        type: String,
+        required: true,
+    },
+    length: {
+        type: Number,
+        required: true,
+    },
+    excerpt: {
+        type: String,
+        required: true,
+    }
 }, {timestamps: true});
 
 export const GoogleScrapedArticle = mongoose.model('GoogleScrapedArticle', googleScrapedArticleSchema)

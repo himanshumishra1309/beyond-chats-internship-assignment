@@ -51,9 +51,6 @@ const articleSchema = new Schema({
         type: [String],
         default: [],
         index: true
-    },
-    status: {
-        type: String,
     }
 }, {timestamps: true});
 

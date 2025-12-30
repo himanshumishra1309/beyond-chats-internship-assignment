@@ -46,12 +46,15 @@ async function doGoogleSearch(title) {
   }
 }
 
-async function scrapeSearchedArticles(title) {
+async function scrapeSearchedArticles(info) {
   try {
-    const scrapedData = await doGoogleSearch(title);
+    const scrapedData = await doGoogleSearch(info.title);
 
-    const scrapedArticleData = await Promise.all(
-      scrapedData.map(async (it) => {
+    const scrapedArticleData = [];
+     for(const it of scrapedData) {
+        if(scrapedArticleData.length > 0) {
+          await new Promise(resolve => setTimeout(resolve, 1500));
+        }
         const url = it.url;
         const { data } = await axios.get(url, {
           headers: {
@@ -68,16 +71,16 @@ async function scrapeSearchedArticles(title) {
           throw new ApiError(404, "Unable to extract article content");
         }
 
-        return {
+        scrapedArticleData.push({
+          article_id: info._id,
           sourceUrl: url,
           title: article.title,
           contentText: article.textContent,
           contentHtml: article.content,
           length: article.length,
           excerpt: article.excerpt,
-        };
-      })
-    );
+        });
+      }
     return scrapedArticleData;
   } catch (error) {
     throw new ApiError(
@@ -86,3 +89,5 @@ async function scrapeSearchedArticles(title) {
     );
   }
 }
+
+export {scrapeSearchedArticles}
