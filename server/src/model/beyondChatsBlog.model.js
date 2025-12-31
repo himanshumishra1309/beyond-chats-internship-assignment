@@ -1,19 +1,6 @@
 import mongoose, {Schema} from "mongoose";
 
-const articleSchema = new Schema({
-    originalArticleId: {
-        type: Schema.Types.ObjectId,
-        ref: "BeyondChatsBlog",
-        required: true,
-        index: true
-    },
-    
-    referenceArticleIds: {
-        type: [Schema.Types.ObjectId],
-        ref: "GoogleScrapedArticle",
-        default: []
-    },
-    
+const beyondChatsBlogSchema = new Schema({
     title:{
         type: String,
         required: true,
@@ -50,7 +37,6 @@ const articleSchema = new Schema({
         type: String,
         trim: true,
     },
-    
     contentText: {
         type: String,
     },
@@ -65,7 +51,7 @@ const articleSchema = new Schema({
         type: [String],
         default: [],
         index: true
-    },
+    }
 }, {timestamps: true});
 
-export const Article = mongoose.model('Article', articleSchema);
+export const BeyondChatsBlog = mongoose.model("BeyondChatsBlog", beyondChatsBlogSchema)

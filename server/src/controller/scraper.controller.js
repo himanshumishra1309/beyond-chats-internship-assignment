@@ -5,6 +5,7 @@ import { getBlogData } from "../scripts/beyondChatScrape.js";
 import { Article } from "../model/article.model.js";
 import { scrapeSearchedArticles } from "../scripts/googleScrape.js";
 import { GoogleScrapedArticle } from "../model/googleScrapedArticle.model.js";
+import { BeyondChatsBlog } from "../model/beyondChatsBlog.model.js";
 
 const scrapeBeyondChatsArticles = asyncHandler(async (req, res) => {
   console.log("scrapeBeyondChatsArticles called")
@@ -17,7 +18,7 @@ const scrapeBeyondChatsArticles = asyncHandler(async (req, res) => {
   const scrapedSlugs = scrapedData.map((article) => article.slug);
 
   const updatePromises = scrapedData.map((article) =>
-    Article.findOneAndUpdate(
+    BeyondChatsBlog.findOneAndUpdate(
       { slug: article.slug },
       {
         $set: {
@@ -48,7 +49,7 @@ const scrapeBeyondChatsArticles = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Error updating scraped data");
   }
 
-  const deleteArticles = await Article.deleteMany({
+  const deleteArticles = await BeyondChatsBlog.deleteMany({
     slug: { $nin: scrapedSlugs },
   });
 
@@ -72,7 +73,7 @@ const scrapeBeyondChatsArticles = asyncHandler(async (req, res) => {
 
 const scrapeGoogleArticles = asyncHandler(async (req, res) => {
     console.log("scrapeGoogleArticles called")
-    const beyondChatsArticles = await Article.find();
+    const beyondChatsArticles = await BeyondChatsBlog.find();
 
     if(!beyondChatsArticles || beyondChatsArticles.length === 0){
         throw new ApiError(404, "No articles of beyond chats found");

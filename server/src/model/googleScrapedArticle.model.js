@@ -1,9 +1,9 @@
 import mongoose, {Schema} from "mongoose";
 
 const googleScrapedArticleSchema = new Schema({
-    article_id: {
+    beyondChat_article_id: {
         type: Schema.Types.ObjectId,
-        ref: "Article",
+        ref: "BeyondChatsBlog",
         required: true,
         index: true
     },
