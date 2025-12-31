@@ -17,4 +17,9 @@ app.use(express.urlencoded({extended: true, limit: '20kb'}));
 
 app.use(cookieParser());
 
+import scraperRouter from './route/scraper.route.js';
+
+
+app.use('/api/v1/scraper', scraperRouter);
+
 export {app}

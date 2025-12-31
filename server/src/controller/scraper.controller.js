@@ -68,11 +68,9 @@ const scrapeBeyondChatsArticles = asyncHandler(async (req, res) => {
 const scrapeGoogleArticles = asyncHandler(async (req, res) => {
     const beyondChatsArticles = await Article.find();
 
-    if(!beyondChatsArticles){
-        throw new ApiError(500, "Error fetching articles of beyond chats");
+    if(!beyondChatsArticles || beyondChatsArticles.length === 0){
+        throw new ApiError(404, "No articles of beyond chats found");
     }
-
-    const beyondChatsArticlesId = beyondChatsArticles.map(article => article._id);
 
     const beyondChatsArticlesInfo = beyondChatsArticles.map(article => ({
         _id: article._id,
@@ -80,54 +78,60 @@ const scrapeGoogleArticles = asyncHandler(async (req, res) => {
     }));
 
     const googleScrapedData = [];
+    let updatedCount = 0;
+    let deletedCount = 0;
 
     for(const it of beyondChatsArticlesInfo){
         const dataReceived = await scrapeSearchedArticles(it);
-        googleScrapedData.push(dataReceived);
-    }
-
-    const updatePromises = googleScrapedData.map((blog) => 
-        GoogleScrapedArticle.findOneAndUpdate(
-            {article_id: blog.article_id},
-            {
-                $set: {
-                    article_id: blog.article_id,
-                    sourceUrl: url,
-                    title: blog.title,
-                    contentText: blog.textContent,
-                    contentHtml: blog.content,
-                    length: blog.length,
-                    excerpt: blog.excerpt,
+        const dataReceivedUrl = dataReceived.map(article => article.sourceUrl);
+        const updatePromises = dataReceived.map((blog) => 
+            GoogleScrapedArticle.findOneAndUpdate(
+                {article_id: blog.article_id, sourceUrl: blog.sourceUrl},
+                {
+                    $set: {
+                        article_id: blog.article_id,
+                        sourceUrl: blog.url,
+                        title: blog.title,
+                        contentText: blog.contentText,
+                        contentHtml: blog.contentHtml,
+                        length: blog.length,
+                        excerpt: blog.excerpt,
+                    }
+                },
+                {
+                    upsert: true,
+                    new: true,
+                    runValidators: true
                 }
-            },
-            {
-                upsert: true,
-                new: true,
-                runValidators: true
-            }
-        )
-    );
+            )
+        );
+        
+        const updatedArticles = await Promise.all(updatePromises);
 
-    const updatedArticles = await Promise.all(updatePromises);
+        if(!updatedArticles){
+            throw new ApiError(500, "Error uploading google scraped articles")
+        }
 
-    if(!updatedArticles){
-        throw new ApiError(500, "Error uploading google scraped articles")
+        googleScrapedData.push(...updatedArticles);
+        updatedCount+=(updatedArticles.length);
+        
+        const deleteArticles = await GoogleScrapedArticle.deleteMany({
+            article_id: it._id,
+            sourceUrl: {$nin: dataReceivedUrl}
+        });
+        deletedCount+=(deleteArticles.deletedCount);
     }
-
-    const deleteArticles = await GoogleScrapedArticle.deleteMany({
-        article_id: {$nin: beyondChatsArticlesId}
-    });
 
     throw new ApiResponse(
         200,
         {
-            articles: updatedArticles,
+            articles: googleScrapedData,
             stats: {
-                total: updatedArticles.length,
-                deleted: deleteArticles.deletedCount,
+                total: updatedCount,
+                deleted: deletedCount,
             },
         },
-        `Successfully synced ${updatedArticles.length} articles. Removed ${deleteArticles.deletedCount} outdated articles.`
+        `Successfully synced ${updatedCount} articles. Removed ${deletedCount} outdated articles.`
     )
 });
 
