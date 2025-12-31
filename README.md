@@ -12,7 +12,7 @@ I would like to express my sincere gratitude to **BeyondChats** for providing me
 
 ## 🚀 Live Demo
 
-🔗 **Frontend**: [Live Link - Coming Soon](#)
+🔗 **Frontend**: [Live Link](https://beyond-chats-internship-assignment-lemon.vercel.app/)
 
 ---
 
