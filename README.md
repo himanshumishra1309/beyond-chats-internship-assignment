@@ -388,13 +388,16 @@ Open **http://localhost:5173** to see both:
 ## 📸 Screenshots
 
 ### Home Page - Updated Articles
-![Updated Articles](./screenshots/updated-articles.png)
+<img width="1901" height="874" alt="Screenshot 2025-12-31 200733" src="https://github.com/user-attachments/assets/5aeeeaf3-18fb-46de-91dd-2ca463ded210" />
+
 
 ### Original Articles
-![Original Articles](./screenshots/original-articles.png)
+<img width="1896" height="877" alt="Screenshot 2025-12-31 200822" src="https://github.com/user-attachments/assets/3170c46a-e264-447d-8d60-3c587eb18cb5" />
+
 
 ### Article Detail View
-![Article Detail](./screenshots/article-detail.png)
+<img width="1903" height="881" alt="Screenshot 2025-12-31 200853" src="https://github.com/user-attachments/assets/12d7e283-6297-4ff8-9307-27cd28b833ce" />
+
 
 ---
 
