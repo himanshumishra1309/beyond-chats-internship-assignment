@@ -8,15 +8,17 @@ async function generatedUpdatedArticle(originalArticle, referenceArticles){
         if(!process.env.GEMINI_API_KEY){
             throw new ApiError(404, "Gemini api key not found");
         }
-
+        
         if (!originalArticle || !referenceArticles || referenceArticles.length === 0) {
             throw new ApiError(400, 'Original article and reference articles are required');
         }
 
+        console.log("llm started:")
+        
         const prompt = buildPrompt(originalArticle, referenceArticles);
 
         const response = await ai.models.generateContent({
-            model: "gemini-1.5-flash",
+            model: "gemini-2.5-flash",
             contents: prompt,
         })
 
@@ -30,6 +32,8 @@ async function generatedUpdatedArticle(originalArticle, referenceArticles){
             contentHtml: generatedText,
             contentText: stripHtml(generatedText)
         }
+
+        console.log("llm completed task: ", result);
 
         return result;
         
@@ -53,7 +57,7 @@ You are an expert content writer and SEO specialist. Your task is to UPDATE an o
 ## ORIGINAL ARTICLE TO UPDATE:
 **Title:** ${originalArticle.title}
 **Content:**
-${originalArticle.contentText?.substring(0, 8000) || originalArticle.excerpt}
+${originalArticle.contentText || originalArticle.excerpt}
 
 ---
 
@@ -61,7 +65,7 @@ ${originalArticle.contentText?.substring(0, 8000) || originalArticle.excerpt}
 **Title:** ${ref1.title}
 **Source:** ${ref1.sourceUrl}
 **Content:**
-${ref1.contentText?.substring(0, 6000) || ref1.excerpt}
+${ref1.contentText || ref1.excerpt}
 
 ---
 
@@ -70,7 +74,7 @@ ${ref2 ? `
 **Title:** ${ref2.title}
 **Source:** ${ref2.sourceUrl}
 **Content:**
-${ref2.contentText?.substring(0, 6000) || ref2.excerpt}
+${ref2.contentText || ref2.excerpt}
 
 ---
 ` : ''}

@@ -32,7 +32,6 @@ async function doGoogleSearch(title) {
           !url.includes("flipkart")
         );
       })
-      .slice(0, 2)
       .map((result) => ({
         title: result.title,
         url: result.link,

@@ -22,7 +22,9 @@ app.get('/', (req, res)=>{
 })
 
 import scraperRouter from './route/scraper.route.js';
+import articleRouter from './route/article.route.js';
 
 app.use('/api/v1/scraper', scraperRouter);
+app.use('/api/v1/articles', articleRouter)
 
 export {app}
