@@ -229,7 +229,7 @@ Or manually create `.env` and copy contents from `.env.example`:
 
 ```env
 PORT = 8000
-MONGODB_URI=your_mongodb_uri
+MONGODB_URI=mongodb+srv://<db_name>:<db_passowrd>@cluster0.2w959aw.mongodb.net
 CORS_ORIGIN=*
 ACCESS_TOKEN_SECRET = acCeSsToKeN-madeByHimansHuMisHRa
 ACCESS_TOKEN_EXPIRY = 1d
@@ -306,17 +306,6 @@ npm install --force
 
 For **local development**, no configuration is needed - it automatically uses `http://localhost:8000/api/v1`.
 
-For **production deployment**, create a `.env` file:
-
-```bash
-cp .env.example .env
-```
-
-Then set your backend URL:
-
-```env
-VITE_API_URL=https://your-backend-url.vercel.app/api/v1
-```
 
 #### Step 4: Run Development Server
 
