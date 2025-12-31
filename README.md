@@ -76,7 +76,7 @@ I would like to express my sincere gratitude to **BeyondChats** for providing me
                │
                ▼ Cheerio Scraping
     ┌─────────────────────┐
-    │  BeyondChatsBlog    │──────────────────────────┐
+    │  BeyondChatsBlog    │◀────────────────────────┐
     │  (MongoDB Schema)   │                          │
     └──────────┬──────────┘                          │
                │                                     │
@@ -107,18 +107,18 @@ I would like to express my sincere gratitude to **BeyondChats** for providing me
     │   (LLM Processing)  │                          │
     └──────────┬──────────┘                          │
                │                                     │
-               │ Enhanced Content + Citations        │
+               │ Enhanced Content                    │
                ▼                                     │
     ┌─────────────────────┐                          │
     │      Article        │     References           │
-    │  (MongoDB Schema)   │                          |
-    └──────────┬──────────┘                          |
-               │                                     |
-               │ REST APIs (Updated Article)         |
-               ▼                                     |
-    ┌─────────────────────┐                          |
-    │   React Frontend    │   (Original Article)     |
-    │  (Original + Updated│◀─────────────────────────┘
+    │  (MongoDB Schema)   │──────────────────────────┘
+    └──────────┬──────────┘
+               │
+               │ REST APIs
+               ▼
+    ┌─────────────────────┐
+    │   React Frontend    │
+    │  (Original + Updated│
     │     Articles)       │
     └─────────────────────┘
 ```
@@ -129,16 +129,16 @@ I would like to express my sincere gratitude to **BeyondChats** for providing me
 ┌─────────────────────┐       ┌─────────────────────┐       ┌─────────────────────┐
 │   BeyondChatsBlog   │       │ GoogleScrapedArticle│       │      Article        │
 ├─────────────────────┤       ├─────────────────────┤       ├─────────────────────┤
-│ _id                 │◀──────│ beyondChat_article_ │       │ originalArticleId   │──┐
-│ title               │  ref  │     id              │       │ referenceArticleIds │──┤
-│ slug                │       │ sourceUrl           │◀──────│ title               │  │
+│ _id                 │<───── │ beyondChat_article_ │       │ originalArticleId   │──┐
+│ title               │  ref  │ _id                 │       │ referenceArticleIds │──┤
+│ slug                │       │ sourceUrl           │<──────│ title               │  │
 │ blogUrl             │       │ title               │  ref  │ contentHtml (LLM)   │  │
 │ contentText         │       │ contentText         │       │ contentText (LLM)   │  │
 │ contentHtml         │       │ contentHtml         │       │ citations           │  │
 │ author              │       │ excerpt             │       └─────────────────────┘  │
-│ tags                │       └─────────────────────┘                               │
+│ tags                │       └─────────────────────┘                                │
 └─────────────────────┘                                                              │
-         ▲                                                                           │
+         ▲                                            ref                            │
          └───────────────────────────────────────────────────────────────────────────┘
 ```
 
