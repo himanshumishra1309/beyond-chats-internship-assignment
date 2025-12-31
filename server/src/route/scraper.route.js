@@ -1,9 +1,9 @@
 import express from 'express';
-import { scrapeBeyondChatsArticles, scrapeGoogleArticles } from '../controller/scraper.controller';
+import { scrapeBeyondChatsArticles, scrapeGoogleArticles } from '../controller/scraper.controller.js';
 
 const router = express.Router();
 
-router.post('/scrape-beyond-chats', scrapeBeyondChatsArticles);
-router.post('/scrape-google-article', scrapeGoogleArticles);
+router.get('/scrape-beyond-chats', scrapeBeyondChatsArticles);
+router.get('/scrape-google-article', scrapeGoogleArticles);
 
 export default router;

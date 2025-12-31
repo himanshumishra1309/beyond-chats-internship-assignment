@@ -1,12 +1,13 @@
-import { ApiError } from "../utils/ApiError";
-import { ApiResponse } from "../utils/ApiResponse";
-import { asyncHandler } from "../utils/asyncHandler";
-import { getBlogData } from "../scripts/beyondChatScrape";
-import { Article } from "../model/article.model";
-import { scrapeSearchedArticles } from "../scripts/googleScrape";
-import { GoogleScrapedArticle } from "../model/googleScrapedArticle.model";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { getBlogData } from "../scripts/beyondChatScrape.js";
+import { Article } from "../model/article.model.js";
+import { scrapeSearchedArticles } from "../scripts/googleScrape.js";
+import { GoogleScrapedArticle } from "../model/googleScrapedArticle.model.js";
 
 const scrapeBeyondChatsArticles = asyncHandler(async (req, res) => {
+  console.log("scrapeBeyondChatsArticles called")
   const scrapedData = await getBlogData();
 
   if (!scrapedData) {
@@ -51,21 +52,26 @@ const scrapeBeyondChatsArticles = asyncHandler(async (req, res) => {
     slug: { $nin: scrapedSlugs },
   });
 
+  console.log("scrapeBeyondChatsArticles completed")
 
-  throw new ApiResponse(
-    200,
-    {
-      articles: updatedArticles,
-      stats: {
-        total: updatedArticles.length,
-        deleted: deleteArticles.deletedCount,
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        articles: updatedArticles,
+        stats: {
+          total: updatedArticles.length,
+          deleted: deleteArticles.deletedCount,
+        },
       },
-    },
-    `Successfully synced ${updatedArticles.length} articles. Removed ${deleteArticles.deletedCount} outdated articles.`
+      `Successfully synced ${updatedArticles.length} articles. Removed ${deleteArticles.deletedCount} outdated articles.`
+    )
   );
 });
 
 const scrapeGoogleArticles = asyncHandler(async (req, res) => {
+    console.log("scrapeGoogleArticles called")
     const beyondChatsArticles = await Article.find();
 
     if(!beyondChatsArticles || beyondChatsArticles.length === 0){
@@ -122,17 +128,21 @@ const scrapeGoogleArticles = asyncHandler(async (req, res) => {
         deletedCount+=(deleteArticles.deletedCount);
     }
 
-    throw new ApiResponse(
-        200,
-        {
-            articles: googleScrapedData,
-            stats: {
-                total: updatedCount,
-                deleted: deletedCount,
+    console.log("scrapeGoogleArticles completed")
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            {
+                articles: googleScrapedData,
+                stats: {
+                    total: updatedCount,
+                    deleted: deletedCount,
+                },
             },
-        },
-        `Successfully synced ${updatedCount} articles. Removed ${deletedCount} outdated articles.`
-    )
+            `Successfully synced ${updatedCount} articles. Removed ${deletedCount} outdated articles.`
+        )
+    );
 });
 
 const completeScrape = asyncHandler(async (req, res) => {
