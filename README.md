@@ -76,7 +76,7 @@ I would like to express my sincere gratitude to **BeyondChats** for providing me
                │
                ▼ Cheerio Scraping
     ┌─────────────────────┐
-    │  BeyondChatsBlog    │◀─────────────────────────┐
+    │  BeyondChatsBlog    │──────────────────────────┐
     │  (MongoDB Schema)   │                          │
     └──────────┬──────────┘                          │
                │                                     │
@@ -111,14 +111,14 @@ I would like to express my sincere gratitude to **BeyondChats** for providing me
                ▼                                     │
     ┌─────────────────────┐                          │
     │      Article        │     References           │
-    │  (MongoDB Schema)   │──────────────────────────┘
-    └──────────┬──────────┘
-               │
-               │ REST APIs
-               ▼
-    ┌─────────────────────┐
-    │   React Frontend    │
-    │  (Original + Updated│
+    │  (MongoDB Schema)   │                          |
+    └──────────┬──────────┘                          |
+               │                                     |
+               │ REST APIs (Updated Article)         |
+               ▼                                     |
+    ┌─────────────────────┐                          |
+    │   React Frontend    │   (Original Article)     |
+    │  (Original + Updated│◀─────────────────────────┘
     │     Articles)       │
     └─────────────────────┘
 ```
