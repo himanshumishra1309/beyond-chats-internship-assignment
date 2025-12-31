@@ -4,7 +4,7 @@ A full-stack application that scrapes articles from BeyondChats blog, searches f
 
 ---
 
-## 🙏 Acknowledgment
+##  Acknowledgment!
 
 I would like to express my sincere gratitude to **BeyondChats** for providing me with this amazing opportunity to work on this assignment. This project has been an incredible learning experience, allowing me to explore web scraping, API integrations, LLM implementations, and full-stack development. Thank you for the chance to showcase my skills and grow as a developer!
 
@@ -427,10 +427,10 @@ Open **http://localhost:5173** to see both:
 
 ## 📄 License
 
-This project is created as part of an internship assignment for BeyondChats.
+This project is licensed under the [MIT License](LICENSE).
 
 ---
 
-## 🙏 Thank You!
+## Thank You!
 
 Thank you **BeyondChats** for this wonderful opportunity. It was an amazing experience building this project!
