@@ -107,7 +107,7 @@ async function scrapeSearchedArticles(info) {
 
         if (article && article.textContent) {
           scrapedArticleData.push({
-            article_id: info._id,
+            beyondChat_article_id: info._id,
             sourceUrl: url,
             title: article.title || it.title,
             contentText: article.textContent,
