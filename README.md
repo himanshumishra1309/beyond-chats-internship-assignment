@@ -6,7 +6,7 @@ A full-stack application that scrapes articles from BeyondChats blog, searches f
 
 ##  Acknowledgment!
 
-I would like to express my sincere gratitude to **BeyondChats** for providing me with this amazing opportunity to work on this assignment. This project has been an incredible learning experience, allowing me to explore web scraping, API integrations, LLM implementations, and full-stack development. Thank you for the chance to showcase my skills and grow as a developer!
+I would like to express my sincere gratitude to **BeyondChats** for providing me with this amazing opportunity to work on this assignment. This project has been an incredible learning experience, allowing me to explore and revise web scraping, API integrations, LLM implementations, and full-stack development. Thank you for the chance to showcase my skills and grow as a developer!
 
 ---
 
@@ -57,7 +57,7 @@ I would like to express my sincere gratitude to **BeyondChats** for providing me
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│                              BeyondChats Article Pipeline                        │
+│                              BeyondChats Article Pipeline                       │
 └─────────────────────────────────────────────────────────────────────────────────┘
 
 ┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
