@@ -62,7 +62,7 @@ I would like to express my sincere gratitude to **BeyondChats** for providing me
 
 ┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
 │   PHASE 1        │     │   PHASE 2        │     │   PHASE 3        │
-│   Scrape Source  │────▶│   Enhance with   │────▶│   Display in     │
+│   Scrape Source  │────>│   Enhance with   │────>│   Display in     │
 │                  │     │   LLM            │     │   Frontend       │
 └──────────────────┘     └──────────────────┘     └──────────────────┘
 
