@@ -74,6 +74,33 @@ async function scrapeSearchedArticles(info) {
           })
         });
 
+        {/*
+        
+          Error that occured:
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="utf-8">
+              <title>Error</title>
+          </head>
+          <body>
+              <pre>Error: unable to verify the first certificate<br> 
+              &nbsp; &nbsp;at scrapeSearchedArticles 
+              (file:///D:/Himanshu%20Mishra/beyondChatProject/server/src/scripts/googleScrape.js:86:11)
+              // <br> &nbsp; &nbsp;at process.processTicksAndRejections 
+              // (node:internal/process/task_queues:105:5)<br> &nbsp; 
+              // &nbsp;at async 
+              // file:///D:/Himanshu%20Mishra/beyondChatProject/server/src/controller/scraper.controller.js:91:30</pre>
+          </body>
+          </html>
+
+          solution:
+          httpsAgent: new (await import('https')).Agent({
+            rejectUnauthorized: false  // Bypass SSL verification
+          })
+          
+        */}
+
         const doc = new JSDOM(data, { url });
         const reader = new Readability(doc.window.document);
         const article = reader.parse();
