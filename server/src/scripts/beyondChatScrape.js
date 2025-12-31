@@ -35,8 +35,11 @@ async function getFiveBlogs() {
     while (blogs.length < 5 && page > 0) {
       const url = `https://beyondchats.com/blogs/page/${page}/`;
       const { data } = await axios.get(url, {
+        headers: {"User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"},
         timeout: 10000,
-        headers: {"User-Agent" : "Mozilla/5.0"} 
+        httpsAgent: new (await import('https')).Agent({
+          rejectUnauthorized: false
+        })
       });
       const $ = cheerio.load(data);
   
@@ -81,8 +84,11 @@ async function getBlogData() {
       for (const el of blogs) {
         const url = el.blogUrl;
         const { data } = await axios.get(url, {
+          headers: {"User-Agent" : "Mozilla/5.0  (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}, 
           timeout: 10000,
-          headers: {"User-Agent" : "Mozilla/5.0"} 
+          httpsAgent: new (await import('https')).Agent({
+            rejectUnauthorized: false
+          })
         });
         const $ = cheerio.load(data);
 
