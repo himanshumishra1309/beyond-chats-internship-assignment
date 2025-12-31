@@ -6,8 +6,11 @@ import { ApiError } from "../utils/ApiError.js";
 async function getMaxPageNumbers() {
   try {
     const { data } = await axios.get("https://beyondchats.com/blogs/", {
+      headers: {"User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}, 
       timeout: 10000,
-      headers: {"User-Agent" : "Mozilla/5.0"} 
+      httpsAgent: new (await import('https')).Agent({
+        rejectUnauthorized: false,
+      })
     });
     const $ = cheerio.load(data);
   
