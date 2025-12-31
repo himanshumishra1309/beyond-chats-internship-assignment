@@ -41,7 +41,7 @@ const getArticleById = asyncHandler(async (req, res)=>{
             "Article data fetched"
         )
     )
-})
+});
 
 const updateArticle = asyncHandler(async (req, res) => {
     const article_id = req.params.id;
