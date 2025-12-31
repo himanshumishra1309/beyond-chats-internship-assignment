@@ -96,7 +96,7 @@ const scrapeGoogleArticles = asyncHandler(async (req, res) => {
                 {
                     $set: {
                         article_id: blog.article_id,
-                        sourceUrl: blog.url,
+                        sourceUrl: blog.sourceUrl,
                         title: blog.title,
                         contentText: blog.contentText,
                         contentHtml: blog.contentHtml,
