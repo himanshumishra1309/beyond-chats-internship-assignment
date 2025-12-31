@@ -31,7 +31,7 @@ async function doGoogleSearch(title) {
           !url.includes("amazon") &&
           !url.includes("flipkart")
         );
-      }).slice(0,2)
+      })
       .map((result) => ({
         title: result.title,
         url: result.link,
@@ -48,17 +48,23 @@ async function doGoogleSearch(title) {
 async function scrapeSearchedArticles(info) {
   try {
     const scrapedData = await doGoogleSearch(info.title);
-    console.log("scrapeSearchedArticles: ", scrapedData);
+    console.log(`[${info.title}] Found ${scrapedData.length} Google results`);
     
     if (!scrapedData || scrapedData.length === 0) {
       throw new ApiError(404, "No Google search results found");
     }
 
     const scrapedArticleData = [];
+    const failedUrls = [];
+    const TARGET_COUNT = 2;
     
     for(const it of scrapedData) {
+      if(scrapedArticleData.length >= TARGET_COUNT) {
+        break;
+      }
+      
       try {
-        if(scrapedArticleData.length > 0) {
+        if(scrapedArticleData.length > 0 || failedUrls.length > 0) {
           await new Promise(resolve => setTimeout(resolve, 1500));
         }
         
@@ -69,36 +75,9 @@ async function scrapeSearchedArticles(info) {
           },
           timeout: 15000,
           httpsAgent: new (await import('https')).Agent({
-            rejectUnauthorized: false  // Bypass SSL verification
+            rejectUnauthorized: false
           })
         });
-
-        {/*
-        
-          Error that occured:
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-              <meta charset="utf-8">
-              <title>Error</title>
-          </head>
-          <body>
-              <pre>Error: unable to verify the first certificate<br> 
-              &nbsp; &nbsp;at scrapeSearchedArticles 
-              (file:///D:/Himanshu%20Mishra/beyondChatProject/server/src/scripts/googleScrape.js:86:11)
-              // <br> &nbsp; &nbsp;at process.processTicksAndRejections 
-              // (node:internal/process/task_queues:105:5)<br> &nbsp; 
-              // &nbsp;at async 
-              // file:///D:/Himanshu%20Mishra/beyondChatProject/server/src/controller/scraper.controller.js:91:30</pre>
-          </body>
-          </html>
-
-          solution:
-          httpsAgent: new (await import('https')).Agent({
-            rejectUnauthorized: false  // Bypass SSL verification
-          })
-          
-        */}
 
         const doc = new JSDOM(data, { url });
         const reader = new Readability(doc.window.document);
@@ -114,14 +93,65 @@ async function scrapeSearchedArticles(info) {
             length: article.length || 0,
             excerpt: article.excerpt || it.snippet,
           });
+          console.log(`[${info.title}] Scraped: ${url}`);
         } else {
-          console.warn(`Failed to extract content from: ${url}`);
+          console.warn(`[${info.title}] No content from: ${url}`);
+          failedUrls.push(it);
         }
       } catch (error) {
-        console.error(`Error scraping ${it.url}:`, error.message);
-        // Continue with next article instead of failing completely
+        console.error(`[${info.title}] Error scraping ${it.url}:`, error.message);
+        failedUrls.push(it);
       }
     }
+    
+    // Retry pass: if we still don't have 2, retry failed URLs once
+    if(scrapedArticleData.length < TARGET_COUNT && failedUrls.length > 0) {
+      console.log(`[${info.title}] Retrying ${failedUrls.length} failed URLs...`);
+      
+      for(const it of failedUrls) {
+        if(scrapedArticleData.length >= TARGET_COUNT) {
+          break;
+        }
+        
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        try {
+          const url = it.url;
+          const { data } = await axios.get(url, {
+            headers: {
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+            },
+            timeout: 15000,
+            httpsAgent: new (await import('https')).Agent({
+              rejectUnauthorized: false
+            })
+          });
+
+          const doc = new JSDOM(data, { url });
+          const reader = new Readability(doc.window.document);
+          const article = reader.parse();
+
+          if (article && article.textContent) {
+            scrapedArticleData.push({
+              beyondChat_article_id: info._id,
+              sourceUrl: url,
+              title: article.title || it.title,
+              contentText: article.textContent,
+              contentHtml: article.content,
+              length: article.length || 0,
+              excerpt: article.excerpt || it.snippet,
+            });
+            console.log(`[${info.title}] Retry success: ${url}`);
+          } else {
+            console.warn(`[${info.title}] Retry failed (no content): ${url}`);
+          }
+        } catch (error) {
+          console.error(`[${info.title}] Retry failed: ${it.url} - ${error.message}`);
+        }
+      }
+    }
+    
+    console.log(`[${info.title}] Final: ${scrapedArticleData.length}/${TARGET_COUNT} articles scraped`);
     
     if (scrapedArticleData.length === 0) {
       throw new ApiError(500, "Failed to scrape any articles from Google results");
