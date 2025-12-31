@@ -1,1 +1,20 @@
 @import "tailwindcss";
+
+@layer base {
+  body {
+    @apply min-h-screen min-w-80 m-0 antialiased;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+  }
+  
+  a {
+    @apply font-medium text-indigo-500 no-underline hover:text-purple-600 transition-colors;
+  }
+  
+  img {
+    @apply max-w-full h-auto;
+  }
+  
+  button {
+    @apply cursor-pointer;
+  }
+}
